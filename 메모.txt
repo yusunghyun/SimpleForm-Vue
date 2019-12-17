@@ -7,3 +7,6 @@ v-if="무언가" 무언가가 참일때 여기 돔 실햄
 v-else 반대
 v-for="item in 무언가" 반복.
 v-bind 어트리뷰트의 값을 바인딩.
+변수 사용은 {{ 변수 }}
+데이터 한개 넘으면 [] 로 만드삼
+v-bind:class='{active: tab === selectedTab}' tab이 seletedTab이라면 class에 active라고 박겠다!
