@@ -1,5 +1,6 @@
 import SearchModel from './models/SearchModel.js'
 import KeywordModel from './models/KeywordModel.js'
+import HistoryModel from './models/HistoryModel.js'
 
 new Vue({
   el: '#app', //아이디가 app인 DOM에 마운팅됨
@@ -9,11 +10,13 @@ new Vue({
     tabs:['추천 검색어','최근 검색어'],
     selectedTab:'',
     keywords:[],
+    history:[],
     searchResult:[]
   },
   created(){//라이프사이클 : 뷰인스턴스가 생성될때 호출되는 함수
     this.selectedTab = this.tabs[0]
     this.fetchKeyword()//뷰인스텐스가 처음으로 실행될때 가져오도록
+    this.fetchHistory()
   },
   methods: {
     onSubmit(e){//돔과 바인딩할 함수를 설정하는 곳.
@@ -37,11 +40,23 @@ new Vue({
         this.keywords = data
       })
     },
+    fetchHistory(){
+      HistoryModel.list().then(data=>{
+        this.history = data
+      })
+    },
+    onClickRemoveHistory(keyword){
+      HistoryModel.remove(keyword)//이게머징
+      this.fetchHistory()
+
+    },
     search(){
       SearchModel.list().then(data=>{
         this.submitted=true
         this.searchResult = data
       })
+      HistoryModel.add(this.query)
+      this.fetchHistory()
     },
     resetForm(){
       this.query='' //여기서 this는 뷰 인스턴스 = 데이터의 쿼리.
