@@ -2,6 +2,8 @@ import SearchModel from './models/SearchModel.js'
 import KeywordModel from './models/KeywordModel.js'
 import HistoryModel from './models/HistoryModel.js'
 
+import FormComponent from './components/FormComponent.js'
+
 new Vue({
   el: '#app', //아이디가 app인 DOM에 마운팅됨
   data: {
@@ -13,17 +15,18 @@ new Vue({
     history:[],
     searchResult:[]
   },
+  components:{
+    'search-form':FormComponent
+  },
   created(){//라이프사이클 : 뷰인스턴스가 생성될때 호출되는 함수
     this.selectedTab = this.tabs[0]
     this.fetchKeyword()//뷰인스텐스가 처음으로 실행될때 가져오도록
     this.fetchHistory()
   },
   methods: {
-    onSubmit(e){//돔과 바인딩할 함수를 설정하는 곳.
+    onSubmit(query){//돔과 바인딩할 함수를 설정하는 곳.
+      this.query = query
       this.search()
-    },
-    onKeyup(e){
-      if(!this.query.length) this.onReset()
     },
     onReset(e){
       this.resetForm()
