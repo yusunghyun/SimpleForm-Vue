@@ -14,4 +14,6 @@ v-bind:class='{active: tab === selectedTab}' tab이 seletedTab이라면 class에
 외부에서 받아온 값을 props라고 함.
 $emit(): child -> parent
 v-bind:data="searchResult"원래는 searchResult로 사용했는데 data로 바인딩
+computed 뷰 템플릿 쪽에 변수마냥 쓰는ㄱ
+
 
