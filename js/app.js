@@ -3,68 +3,69 @@ import KeywordModel from './models/KeywordModel.js'
 import HistoryModel from './models/HistoryModel.js'
 
 import FormComponent from './components/FormComponent.js'
+import ResultComponent from './components/ResultComponent.js'
 
 new Vue({
-  el: '#app', //아이디가 app인 DOM에 마운팅됨
+  el: '#app',
   data: {
-    query:'', //query는 입력데이터. v-model='query로 연결
+    query: '',
     submitted: false,
-    tabs:['추천 검색어','최근 검색어'],
-    selectedTab:'',
-    keywords:[],
-    history:[],
-    searchResult:[]
+    tabs: ['추천 검색어', '최근 검색어'],
+    selectedTab: '',
+    keywords: [],
+    history: [],
+    searchResult: []
   },
-  components:{
-    'search-form':FormComponent
+  components: {
+    'search-form': FormComponent,
+    'search-result': ResultComponent
   },
-  created(){//라이프사이클 : 뷰인스턴스가 생성될때 호출되는 함수
+  created() {
     this.selectedTab = this.tabs[0]
-    this.fetchKeyword()//뷰인스텐스가 처음으로 실행될때 가져오도록
+    this.fetchKeyword()
     this.fetchHistory()
   },
   methods: {
-    onSubmit(query){//돔과 바인딩할 함수를 설정하는 곳.
+    onSubmit(query) {
       this.query = query
       this.search()
     },
-    onReset(e){
+    onReset(e) {
       this.resetForm()
     },
-    onClickTab(tab){
+    onClickTab(tab) {
       this.selectedTab = tab
     },
-    onClickKeyword(keyword){
-      this.query = keyword
+    onClickKeyword(keyword) {
+      this.query = keyword;
       this.search()
     },
-    fetchKeyword(){
-      KeywordModel.list().then(data=>{
+    onClickRemoveHistory(keyword) {
+      HistoryModel.remove(keyword)
+      this.fetchHistory()
+    },
+    fetchKeyword() {
+      KeywordModel.list().then(data => {
         this.keywords = data
       })
     },
-    fetchHistory(){
-      HistoryModel.list().then(data=>{
+    fetchHistory() {
+      HistoryModel.list().then(data => {
         this.history = data
       })
     },
-    onClickRemoveHistory(keyword){
-      HistoryModel.remove(keyword)//이게머징
-      this.fetchHistory()
-
-    },
-    search(){
-      SearchModel.list().then(data=>{
-        this.submitted=true
+    search() {
+      SearchModel.list().then(data => {
+        this.submitted = true
         this.searchResult = data
       })
       HistoryModel.add(this.query)
       this.fetchHistory()
     },
-    resetForm(){
-      this.query='' //여기서 this는 뷰 인스턴스 = 데이터의 쿼리.
+    resetForm() {
+      this.query = ''
       this.submitted = false
       this.searchResult = []
-    },
+    }
   }
 })
